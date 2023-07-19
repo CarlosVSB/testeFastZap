@@ -12,6 +12,6 @@ router.register(r'produto', ProdutoViewSet, basename='produto')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('produto/purchase/', ProdutoViewSet.as_view({"post": "purchase"})),
+    # path('produto/purchase/', ProdutoViewSet.as_view({"post": "purchase"})),
     path('api-auth/', include('rest_framework.urls'))
 ]

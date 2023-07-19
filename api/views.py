@@ -16,19 +16,6 @@ from .serializers import ProdutoSerializer
 class ProdutoViewSet(viewsets.ModelViewSet):
     queryset = Produto.objects.all()
     serializer_class = ProdutoSerializer
-    # http_method_names = ['get', 'post', 'head', 'delete', 'put']
-
-    # def get_queryset(self):
-    #     send_mail.apply_async(args=[1])
-    #     print("ABCDEFG")
-    #     return Produto.objects.all()
-    
-    # def list(self, request):
-    #     print("ABCDEFG")
-    #     send_mail.apply_async(args=[1])
-    #     queryset = Produto.objects.all()
-    #     serializer = ProdutoSerializer(queryset, many=True)
-    #     return Response(serializer.data)
 
     def delete(self, request, pk):
         produto = Produto.objects.get(id=pk)
@@ -37,17 +24,18 @@ class ProdutoViewSet(viewsets.ModelViewSet):
 
     def update(self, request, pk):
         produto = Produto.objects.get(id=pk)
-        send_mail.apply_async(args=[produto.id])
         serializer = ProdutoSerializer(produto, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(methods=["post"],detail=False,url_path="purchase")
     def purchase(self, request, pk=None):
         product_id = request.data.get("product_id")
-        quantity = request.data.get("quantity")
+        quantity = int(request.data.get("quantity"))
         produto = Produto.objects.get(id=product_id)
+        send_mail.apply_async(args=[produto.id])
         if produto.quantity >= quantity:
             produto.quantity -= quantity
             produto.save()
