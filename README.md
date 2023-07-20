@@ -27,6 +27,10 @@ docker-compose up -d (Em alguns casos necessita permissões de super usuário)
 ```
 
 ## 2 - Informações de uso
+####  A rota principal da API é a seguinte:
+```
+localhost:8000/produto/
+```
 
 ####  Formato json para criar produtos
 
@@ -39,6 +43,11 @@ Exemplo JSON:
   "price": "8.99",
   "quantity": "8"
 }
+```
+
+#### Para deletar ou atualizar um produto deve-se usar o caminho seguinte caminho e informar campos caso seja uma operação de PUT:
+```
+localhost:8000/produto/<str:product_id>
 ```
 
 #### Para realizar vendas
