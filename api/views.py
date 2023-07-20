@@ -1,4 +1,5 @@
 import time
+import logging
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -45,6 +46,7 @@ class ProdutoViewSet(viewsets.ModelViewSet):
         except:
             raise ValidationError
         send_mail.apply_async(args=[produto.id])
+        logging.info(f"E-mail enviado para o produto com ID {produto.id}")
         if produto.quantity >= quantity:
             produto.quantity -= quantity
             produto.save()
@@ -57,4 +59,5 @@ class ProdutoViewSet(viewsets.ModelViewSet):
 def send_mail(task_definition, produto_id):
     # time.sleep(5)
     time.sleep(5)
+    logging.info(f"E-mail enviado para o produto com ID {produto_id}")
     print(f"E-mail enviado para o produto com ID {produto_id}")
