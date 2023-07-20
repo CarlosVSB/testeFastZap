@@ -18,12 +18,18 @@ class ProdutoViewSet(viewsets.ModelViewSet):
     serializer_class = ProdutoSerializer
 
     def delete(self, request, pk):
-        produto = Produto.objects.get(id=pk)
+        try:
+            produto = Produto.objects.get(id=pk)
+        except:
+            raise ValidationError
         produto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, pk):
-        produto = Produto.objects.get(id=pk)
+        try:
+            produto = Produto.objects.get(id=pk)
+        except:
+            raise ValidationError
         serializer = ProdutoSerializer(produto, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
@@ -34,7 +40,10 @@ class ProdutoViewSet(viewsets.ModelViewSet):
     def purchase(self, request, pk=None):
         product_id = request.data.get("product_id")
         quantity = int(request.data.get("quantity"))
-        produto = Produto.objects.get(id=product_id)
+        try:
+            produto = Produto.objects.get(id=product_id)
+        except:
+            raise ValidationError
         send_mail.apply_async(args=[produto.id])
         if produto.quantity >= quantity:
             produto.quantity -= quantity
